@@ -13,14 +13,15 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components.PlayerItem
 
 
 @Composable
 fun TrackerScreen(
-    viewModel: TrackerViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: PlayerViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
@@ -44,7 +45,7 @@ fun TrackerScreen(
                 PlayerItem(
                     player = player,
                     modifier = Modifier.fillMaxWidth().clickable {
-                        viewModel.onEvent(PlayersEvent.DeletePlayer(player))
+                        viewModel.onEvent(TrackerEvent.DeletePlayer(player))
                     }) {
 
                 }

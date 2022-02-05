@@ -13,11 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TrackerViewModel @Inject constructor(private val playerUseCases: PlayerUseCases) :
+class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseCases) :
     ViewModel() {
 
-    private val _state = mutableStateOf(PlayersState())
-    val state: State<PlayersState> = _state
+    private val _state = mutableStateOf(TrackerState())
+    val state: State<TrackerState> = _state
 
     private var playersJob: Job? = null
 
@@ -25,9 +25,9 @@ class TrackerViewModel @Inject constructor(private val playerUseCases: PlayerUse
         getPlayers()
     }
 
-    fun onEvent(event: PlayersEvent) {
+    fun onEvent(event: TrackerEvent) {
         when (event) {
-            is PlayersEvent.DeletePlayer -> {
+            is TrackerEvent.DeletePlayer -> {
                 viewModelScope.launch {
                     playerUseCases.deletePlayer(event.player)
                 }

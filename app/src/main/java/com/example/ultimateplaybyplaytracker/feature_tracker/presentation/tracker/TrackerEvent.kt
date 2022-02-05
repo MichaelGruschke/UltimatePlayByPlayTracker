@@ -2,5 +2,7 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.track
 
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 
-data class PlayersState (val players: List<Player> = emptyList())
-
+sealed class TrackerEvent {
+    data class DeletePlayer(val player: Player): TrackerEvent()
+    data class AddPlayer(val player: Player): TrackerEvent()
+}
