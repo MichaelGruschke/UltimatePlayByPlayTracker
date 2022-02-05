@@ -7,6 +7,8 @@ import org.jetbrains.annotations.PropertyKey
 @Entity
 data class Player(
 
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Int?= null,
     val name: String,
 )
+
+class InvalidPlayerException(message: String): Exception(message)

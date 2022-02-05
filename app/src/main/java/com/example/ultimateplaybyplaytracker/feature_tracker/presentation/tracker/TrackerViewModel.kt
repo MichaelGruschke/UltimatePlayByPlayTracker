@@ -1,19 +1,44 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TrackerViewModel @Inject constructor(private val playerUseCases: PlayerUseCases) :
     ViewModel() {
 
-        fun onEvent(event: PlayersEvent){
-            when(event) {
-                is PlayersEvent.DeletePlayer -> {
+    private val _state = mutableStateOf(PlayersState())
+    val state: State<PlayersState> = _state
 
+    private var playersJob: Job? = null
+
+    init {
+        getPlayers()
+    }
+
+    fun onEvent(event: PlayersEvent) {
+        when (event) {
+            is PlayersEvent.DeletePlayer -> {
+                viewModelScope.launch {
+                    playerUseCases.deletePlayer(event.player)
                 }
             }
         }
+    }
+
+    fun getPlayers() {
+        playersJob?.cancel()
+        playersJob = playerUseCases.getPlayers().onEach { players ->
+            _state.value = state.value.copy(players = players)
+        }.launchIn(viewModelScope)
+    }
 }

@@ -7,5 +7,7 @@ interface PlayerRepository {
 
     fun getPlayers(): Flow<List<Player>>
 
+    suspend fun insertPlayer(player: Player)
+
     suspend fun deletePlayer(player: Player)
 }

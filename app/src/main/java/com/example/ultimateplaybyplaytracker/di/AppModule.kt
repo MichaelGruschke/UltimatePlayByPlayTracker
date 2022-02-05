@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.data_source.PlayerDatabase
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayerRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.AddPlayer
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.DeletePlayer
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.GetPlayers
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
@@ -36,7 +37,8 @@ object AppModule {
     fun providePlayerUseCases(repository: PlayerRepository): PlayerUseCases {
         return PlayerUseCases(
             getPlayers = GetPlayers(repository),
-            deletePlayer = DeletePlayer(repository)
+            deletePlayer = DeletePlayer(repository),
+            addPlayer = AddPlayer(repository),
         )
     }
 }
