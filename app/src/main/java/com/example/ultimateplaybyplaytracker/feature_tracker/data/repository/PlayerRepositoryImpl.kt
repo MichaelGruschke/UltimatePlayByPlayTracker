@@ -10,14 +10,6 @@ class PlayerRepositoryImpl(private val dao: PlayerDao) : PlayerRepository {
         return dao.getPlayers()
     }
 
-    override suspend fun getPlayerById(id: Int): Player? {
-        return dao.getPlayerById(id)
-    }
-
-    override suspend fun insertPlayer(player: Player) {
-        dao.insertPlayer(player)
-    }
-
     override suspend fun deletePlayer(player: Player) {
         dao.deletePlayer(player)
     }
