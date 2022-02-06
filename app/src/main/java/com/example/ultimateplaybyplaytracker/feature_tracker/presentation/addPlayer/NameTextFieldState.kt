@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer
 
 data class NameTextFieldState(
     val text: String = "",

@@ -12,7 +12,7 @@ interface PlayerDao {
     fun getPlayers(): Flow<List<Player>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPlayer(player: Player)
+    suspend fun insertPlayer(player: Player)
 
     @Delete
     suspend fun deletePlayer(player: Player)

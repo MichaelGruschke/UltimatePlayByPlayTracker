@@ -16,8 +16,8 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseCases) :
     ViewModel() {
 
-    private val _state = mutableStateOf(TrackerState())
-    val state: State<TrackerState> = _state
+    private val _state = mutableStateOf(PlayersState())
+    val state: State<PlayersState> = _state
 
     private var playersJob: Job? = null
 

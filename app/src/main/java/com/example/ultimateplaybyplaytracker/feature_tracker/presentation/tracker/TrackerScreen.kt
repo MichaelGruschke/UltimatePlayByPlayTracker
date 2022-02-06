@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components.PlayerItem
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
 
 
 @Composable
@@ -25,13 +26,12 @@ fun TrackerScreen(
 ) {
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    navController.navigate(Screen.AddPlayerScreen.route)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {

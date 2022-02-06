@@ -1,11 +1,10 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.InvalidPlayerException
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
@@ -18,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AddPlayerViewModel @Inject constructor(
     private val playerUseCases: PlayerUseCases,
-    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _playerName = mutableStateOf(
@@ -31,18 +29,9 @@ class AddPlayerViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private val currentPlayerId: Int? = null
-
-    init {
-        savedStateHandle.get<Int>("playerId")?.let { playerId ->
-
-
-        }
-    }
-
     fun onEvent(event: AddPlayerEvent) {
         when (event) {
-            is AddPlayerEvent.EntreredTitle -> {
+            is AddPlayerEvent.EnteredName -> {
                 _playerName.value = playerName.value.copy(
                     text = event.value
                 )
@@ -57,7 +46,7 @@ class AddPlayerViewModel @Inject constructor(
                     try {
                         playerUseCases.addPlayer(
                             Player(
-                                id = currentPlayerId,
+                                id=1,
                                 name = playerName.value.text
                             )
                         )

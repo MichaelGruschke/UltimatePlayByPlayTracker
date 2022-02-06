@@ -1,5 +1,6 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,6 +8,7 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -38,32 +40,36 @@ fun AddPlayerScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.onEvent(AddPlayerEvent.SavePlayer)
-            },
-             backgroundColor = MaterialTheme.colors.primary
+            FloatingActionButton(
+                onClick = {
+                    viewModel.onEvent(AddPlayerEvent.SavePlayer)
+                },
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(imageVector = Icons.Default.Save, contentDescription = "Save player")
             }
         },
         scaffoldState = scaffoldState
     ) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .background(Color.White)
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = nameState.text,
                 hint = nameState.hint,
                 onValueChange = {
-                                viewModel.onEvent(AddPlayerEvent.EntreredTitle(it))
+                    viewModel.onEvent(AddPlayerEvent.EnteredName(it))
                 },
                 onFocusChange = {
                     viewModel.onEvent(AddPlayerEvent.ChangeTitleFocus(it))
                 },
-                isHintVisisble = nameState.isHintVisisble,
+                isHintVisible = nameState.isHintVisisble,
                 singleLine = true,
-                textStyle = MaterialTheme.typography.h3
+                textStyle = MaterialTheme.typography.h5
             )
         }
     }

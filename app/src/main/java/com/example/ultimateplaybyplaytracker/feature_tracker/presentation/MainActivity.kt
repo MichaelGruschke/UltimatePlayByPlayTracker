@@ -8,12 +8,13 @@ import androidx.compose.material.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.ultimateplaybyplaytracker.R
-import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.AddPlayerScreen
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer.AddPlayerScreen
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.TrackerScreen
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
 import com.example.ultimateplaybyplaytracker.ui.theme.CleanArchitectureNoteAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
