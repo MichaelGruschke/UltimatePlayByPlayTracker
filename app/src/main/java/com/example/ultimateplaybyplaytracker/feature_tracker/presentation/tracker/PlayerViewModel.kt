@@ -25,9 +25,9 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
         getPlayers()
     }
 
-    fun onEvent(event: TrackerEvent) {
+    fun onEvent(event: PlayerEvent) {
         when (event) {
-            is TrackerEvent.DeletePlayer -> {
+            is PlayerEvent.DeletePlayer -> {
                 viewModelScope.launch {
                     playerUseCases.deletePlayer(event.player)
                 }

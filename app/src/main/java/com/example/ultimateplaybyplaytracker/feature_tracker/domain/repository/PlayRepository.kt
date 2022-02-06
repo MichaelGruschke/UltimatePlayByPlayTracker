@@ -7,7 +7,7 @@ interface PlayRepository {
 
     fun getPlays(): Flow<List<Play>>
 
-    fun getMostRecentPlays(amount: Int): Flow<List<Play>>
+    fun getMostRecentPlays(amount: Int):  Flow<List<Play>>
 
     suspend fun insertPlay(play: Play)
 

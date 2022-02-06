@@ -5,6 +5,7 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayRepository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 
 class PlayRepositoryImpl(private val dao: PlayDao) : PlayRepository {
@@ -14,7 +15,7 @@ class PlayRepositoryImpl(private val dao: PlayDao) : PlayRepository {
     }
 
     override fun getMostRecentPlays(amount: Int): Flow<List<Play>> {
-        return dao.getPlays().map { plays -> plays.takeLast(amount) }
+        return dao.getPlays().map { players -> players.takeLast(amount) }
     }
 
     override suspend fun insertPlay(play: Play) {
