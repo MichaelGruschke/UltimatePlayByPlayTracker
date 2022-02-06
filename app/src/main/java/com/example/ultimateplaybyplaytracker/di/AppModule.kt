@@ -3,6 +3,7 @@ package com.example.ultimateplaybyplaytracker.di
 import android.app.Application
 import androidx.room.Room
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.data_source.PlayerDatabase
+import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayerRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.AddPlayer
@@ -30,6 +31,12 @@ object AppModule {
     @Singleton
     fun providePlayerRepository(db: PlayerDatabase) : PlayerRepository {
         return PlayerRepositoryImpl(db.playerDao)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayRepository(db: PlayerDatabase) : PlayRepositoryImpl {
+        return PlayRepositoryImpl(db.playDao)
     }
 
     @Provides
