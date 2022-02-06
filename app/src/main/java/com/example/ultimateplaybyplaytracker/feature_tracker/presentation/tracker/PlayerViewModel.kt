@@ -35,7 +35,7 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
         }
     }
 
-    fun getPlayers() {
+    private fun getPlayers() {
         playersJob?.cancel()
         playersJob = playerUseCases.getPlayers().onEach { players ->
             _state.value = state.value.copy(players = players)

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class AddPlayerViewModel @Inject constructor(
@@ -46,7 +47,7 @@ class AddPlayerViewModel @Inject constructor(
                     try {
                         playerUseCases.addPlayer(
                             Player(
-                                id=1,
+                                id = Random.nextInt(),
                                 name = playerName.value.text
                             )
                         )
