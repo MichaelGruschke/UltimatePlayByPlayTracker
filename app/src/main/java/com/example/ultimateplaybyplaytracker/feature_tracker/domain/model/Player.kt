@@ -7,7 +7,7 @@ import org.jetbrains.annotations.PropertyKey
 @Entity
 data class Player(
 
-    @PrimaryKey val id: Int?= null,
+    @PrimaryKey val id: String,
     val name: String,
 )
 

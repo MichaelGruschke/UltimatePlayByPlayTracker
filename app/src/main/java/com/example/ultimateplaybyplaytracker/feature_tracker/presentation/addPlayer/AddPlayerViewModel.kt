@@ -2,18 +2,19 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPl
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.InvalidPlayerException
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.sha256
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
+
 
 @HiltViewModel
 class AddPlayerViewModel @Inject constructor(
@@ -47,7 +48,7 @@ class AddPlayerViewModel @Inject constructor(
                     try {
                         playerUseCases.addPlayer(
                             Player(
-                                id = Random.nextInt(),
+                                id = playerName.value.text.sha256(),
                                 name = playerName.value.text
                             )
                         )

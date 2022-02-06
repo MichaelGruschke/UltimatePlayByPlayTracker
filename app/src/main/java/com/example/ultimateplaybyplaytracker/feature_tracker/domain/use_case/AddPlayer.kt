@@ -1,5 +1,6 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case
 
+import android.util.Log
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.InvalidPlayerException
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
