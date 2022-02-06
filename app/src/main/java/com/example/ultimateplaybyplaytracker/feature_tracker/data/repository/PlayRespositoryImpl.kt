@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PlayRepositoryImpl(private val dao: PlayDao) : PlayRepository {
+
     override fun getPlays(): Flow<List<Play>> {
         return dao.getPlays()
     }

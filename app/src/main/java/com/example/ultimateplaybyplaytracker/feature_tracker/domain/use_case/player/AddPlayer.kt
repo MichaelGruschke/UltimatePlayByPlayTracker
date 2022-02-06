@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case
+package com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player
 
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.InvalidPlayerException
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
