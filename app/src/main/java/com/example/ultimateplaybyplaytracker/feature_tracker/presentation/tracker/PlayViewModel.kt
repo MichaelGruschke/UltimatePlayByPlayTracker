@@ -12,6 +12,9 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.log
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -24,10 +27,16 @@ class PlayViewModel @Inject constructor(private val playUseCases: PlayUseCases) 
     private val _state = mutableStateOf(PlaysState())
     val state: State<PlaysState> = _state
 
+    private var playsJob: Job? = null
+
+    init {
+        getPlays()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: PlayEvent) {
         when (event) {
-            is PlayEvent.RevertPlay -> {
+            is PlayEvent.revertPlay -> {
                 viewModelScope.launch {
                     playUseCases.deletePlay(event.play)
                 }
@@ -47,6 +56,12 @@ class PlayViewModel @Inject constructor(private val playUseCases: PlayUseCases) 
                 }
             }
         }
+    }
+    private fun getPlays() {
+        playsJob?.cancel()
+        playsJob = playUseCases.getPlays().onEach { plays ->
+            _state.value = state.value.copy(plays = plays)
+        }.launchIn(viewModelScope)
     }
 }
 
