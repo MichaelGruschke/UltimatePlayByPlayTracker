@@ -77,7 +77,7 @@ fun TrackerScreen(
                     }, colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Red,
                         contentColor = MaterialTheme.colors.surface
-                    )
+                    ),enabled = playState.plays.isNotEmpty()
                 ) {
                     Text(text = "Undo")
                 }
