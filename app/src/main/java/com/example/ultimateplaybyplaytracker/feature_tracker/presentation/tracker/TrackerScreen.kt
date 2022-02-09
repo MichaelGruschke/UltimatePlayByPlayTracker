@@ -3,6 +3,8 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.track
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.GridCells
@@ -43,6 +45,10 @@ fun TrackerScreen(
         },
         scaffoldState = scaffoldState
     ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Text(text = "PLACEHOLDER")
+        }
+        
         LazyVerticalGrid(modifier = Modifier.fillMaxSize(),
         cells = GridCells.Adaptive(128.dp)) {
             items(state.players) { player ->
@@ -58,3 +64,6 @@ fun TrackerScreen(
     }
 
 }
+
+
+

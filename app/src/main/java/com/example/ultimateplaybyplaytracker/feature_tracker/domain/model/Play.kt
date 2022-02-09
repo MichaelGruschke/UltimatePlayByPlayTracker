@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Play(
-    @PrimaryKey val timestamp: Long,
-    val PlayType: String,
+    @PrimaryKey val timestamp: String,
+    val event: String,
 )

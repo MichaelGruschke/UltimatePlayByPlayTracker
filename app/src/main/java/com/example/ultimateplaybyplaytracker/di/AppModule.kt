@@ -5,7 +5,12 @@ import androidx.room.Room
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.data_source.TrackerDatabase
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayerRepositoryImpl
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayRepository
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.DeletePlay
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.GetPlays
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.LogPlay
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.AddPlayer
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.DeletePlayer
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.GetPlayers
@@ -33,11 +38,7 @@ object AppModule {
         return PlayerRepositoryImpl(db.playerDao)
     }
 
-    @Provides
-    @Singleton
-    fun providePlayRepository(db: TrackerDatabase) : PlayRepositoryImpl {
-        return PlayRepositoryImpl(db.playDao)
-    }
+
 
     @Provides
     @Singleton
@@ -46,6 +47,22 @@ object AppModule {
             getPlayers = GetPlayers(repository),
             deletePlayer = DeletePlayer(repository),
             addPlayer = AddPlayer(repository),
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayRepository(db: TrackerDatabase) : PlayRepository {
+        return PlayRepositoryImpl(db.playDao)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayUseCases(repository: PlayRepository): PlayUseCases {
+        return PlayUseCases(
+            logPlay = LogPlay(repository),
+            getPlays = GetPlays(repository),
+            deletePlay = DeletePlay(repository)
         )
     }
 }
