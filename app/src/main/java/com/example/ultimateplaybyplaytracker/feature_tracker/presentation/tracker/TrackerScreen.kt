@@ -8,10 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -42,7 +39,6 @@ fun TrackerScreen(
     val playState = playViewModel.state.value
     val scaffoldState = rememberScaffoldState()
 
-    val lastPlay: Play? = null
 
     Scaffold(
         floatingActionButton = {
@@ -61,7 +57,8 @@ fun TrackerScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(Color.White),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = playState.plays.takeLast(5).map { item ->
@@ -70,12 +67,18 @@ fun TrackerScreen(
                     color = Color.Black
                 )
 
-
-                OutlinedButton(onClick = {
-
-                }) {
-                    Text("Undo")
+                Button(
+                    onClick = {
+                        playViewModel.onEvent(PlayEvent.revertPlay(playState.plays.last()))
+                    }, colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.Red,
+                        contentColor = MaterialTheme.colors.surface
+                    )
+                ) {
+                    Text(text = "Undo")
                 }
+
+
             }
 
 
