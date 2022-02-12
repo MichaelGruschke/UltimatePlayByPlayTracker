@@ -1,5 +1,6 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ fun PlayerItem(
     player: Player,
     modifier: Modifier,
 ){
+    Log.d("STATUS", "creating player item for player: ${player.name}")
     Box(
         modifier = modifier.padding(8.dp).background(Color.White)
     ) {

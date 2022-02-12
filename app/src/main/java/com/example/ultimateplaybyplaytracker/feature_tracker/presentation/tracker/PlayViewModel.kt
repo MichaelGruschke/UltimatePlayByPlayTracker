@@ -7,8 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.DeletePlay
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +16,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(private val playUseCases: PlayUseCases) :
@@ -36,15 +33,15 @@ class PlayViewModel @Inject constructor(private val playUseCases: PlayUseCases) 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: PlayEvent) {
         when (event) {
-            is PlayEvent.revertPlay -> {
+            is PlayEvent.RevertPlay -> {
                 viewModelScope.launch {
                     playUseCases.deletePlay(event.play)
                 }
             }
-            is PlayEvent.exportPlays -> {
+            is PlayEvent.ExportPlays -> {
                 TODO()
             }
-            is PlayEvent.logPlay -> {
+            is PlayEvent.LogPlay -> {
                 viewModelScope.launch {
 
                     playUseCases.logPlay(
