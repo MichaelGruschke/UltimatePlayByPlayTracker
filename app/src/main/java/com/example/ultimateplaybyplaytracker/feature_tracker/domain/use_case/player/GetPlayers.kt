@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.map
 
 class GetPlayers(private val repository: PlayerRepository) {
     operator fun invoke(): Flow<List<Player>> {
-        return repository.getPlayers().map { players -> players.sortedBy { it.name } }
+        return repository.getPlayers().map { players -> players.sortedBy { it.name.lowercase() } }
     }
 }

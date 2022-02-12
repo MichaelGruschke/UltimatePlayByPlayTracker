@@ -49,7 +49,7 @@ class AddPlayerViewModel @Inject constructor(
                         playerUseCases.addPlayer(
                             Player(
                                 id = playerName.value.text.sha256(),
-                                name = playerName.value.text
+                                name = playerName.value.text.trim()
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)
