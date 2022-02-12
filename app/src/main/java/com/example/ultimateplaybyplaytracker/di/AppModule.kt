@@ -2,13 +2,19 @@ package com.example.ultimateplaybyplaytracker.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.ultimateplaybyplaytracker.feature_tracker.data.data_source.PlayerDatabase
+import com.example.ultimateplaybyplaytracker.feature_tracker.data.data_source.TrackerDatabase
+import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayerRepositoryImpl
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayRepository
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.AddPlayer
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.DeletePlayer
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.GetPlayers
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.DeletePlay
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.GetPlays
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.LogPlay
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.AddPlayer
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.DeletePlayer
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.GetPlayers
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.PlayerUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,16 +27,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePlayerDatabase(app: Application): PlayerDatabase {
-        return Room.databaseBuilder(app, PlayerDatabase::class.java, PlayerDatabase.DATABASE_NAME)
+    fun provideTrackerDatabase(app: Application): TrackerDatabase {
+        return Room.databaseBuilder(app, TrackerDatabase::class.java, TrackerDatabase.DATABASE_NAME)
             .build()
     }
 
     @Provides
     @Singleton
-    fun providePlayerRepository(db: PlayerDatabase) : PlayerRepository {
+    fun providePlayerRepository(db: TrackerDatabase) : PlayerRepository {
         return PlayerRepositoryImpl(db.playerDao)
     }
+
+
 
     @Provides
     @Singleton
@@ -39,6 +47,22 @@ object AppModule {
             getPlayers = GetPlayers(repository),
             deletePlayer = DeletePlayer(repository),
             addPlayer = AddPlayer(repository),
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayRepository(db: TrackerDatabase) : PlayRepository {
+        return PlayRepositoryImpl(db.playDao)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayUseCases(repository: PlayRepository): PlayUseCases {
+        return PlayUseCases(
+            logPlay = LogPlay(repository),
+            getPlays = GetPlays(repository),
+            deletePlay = DeletePlay(repository)
         )
     }
 }

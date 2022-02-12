@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case
+package com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player
 
 import android.util.Log
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.InvalidPlayerException

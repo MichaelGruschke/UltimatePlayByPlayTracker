@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.InvalidPlayerException
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.PlayerUseCases
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.sha256
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.PlayerUseCases
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.PlayerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -25,9 +25,9 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
         getPlayers()
     }
 
-    fun onEvent(event: TrackerEvent) {
+    fun onEvent(event: PlayerEvent) {
         when (event) {
-            is TrackerEvent.DeletePlayer -> {
+            is PlayerEvent.DeletePlayer -> {
                 viewModelScope.launch {
                     playerUseCases.deletePlayer(event.player)
                 }
