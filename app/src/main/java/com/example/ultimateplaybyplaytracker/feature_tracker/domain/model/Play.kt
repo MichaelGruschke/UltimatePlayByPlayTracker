@@ -8,3 +8,5 @@ data class Play(
     @PrimaryKey val timestamp: String,
     val event: String,
 )
+
+

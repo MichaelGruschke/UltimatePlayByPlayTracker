@@ -28,7 +28,7 @@ class AddPlayerViewModel @Inject constructor(
     )
     val playerName: State<NameTextFieldState> = _playerName
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    private val _eventFlow = MutableSharedFlow<AddPlayerUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(event: AddPlayerEvent) {
@@ -52,10 +52,10 @@ class AddPlayerViewModel @Inject constructor(
                                 name = playerName.value.text.trim()
                             )
                         )
-                        _eventFlow.emit(UiEvent.SaveNote)
+                        _eventFlow.emit(AddPlayerUiEvent.SaveNote)
                     } catch (e: InvalidPlayerException) {
                         _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
+                            AddPlayerUiEvent.ShowSnackbar(
                                 message = e.message ?: "Invalid Player"
                             )
                         )
@@ -65,8 +65,8 @@ class AddPlayerViewModel @Inject constructor(
         }
     }
 
-    sealed class UiEvent {
-        data class ShowSnackbar(val message: String) : UiEvent()
-        object SaveNote : UiEvent()
+    sealed class AddPlayerUiEvent {
+        data class ShowSnackbar(val message: String) : AddPlayerUiEvent()
+        object SaveNote : AddPlayerUiEvent()
     }
 }

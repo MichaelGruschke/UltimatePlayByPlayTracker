@@ -2,13 +2,11 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.track
 
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -18,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,8 +26,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components.PlayerItem
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer.AddPlayerViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,6 +44,18 @@ fun TrackerScreen(
     val scaffoldState = rememberScaffoldState()
 
     val isEditMode = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = "TrackerScreen") {
+        playViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is PlayViewModel.TrackerUiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+            }
+        }
+    }
 
 
     Scaffold(
@@ -90,10 +102,17 @@ fun TrackerScreen(
 
 
             }
-            Switch(
-                modifier = Modifier.height(64.dp),
-                checked = isEditMode.value,
-                onCheckedChange = { isEditMode.value = it })
+            Row() {
+                Switch(
+                    modifier = Modifier.height(64.dp),
+                    checked = isEditMode.value,
+                    onCheckedChange = { isEditMode.value = it })
+                
+                Button(onClick = {playViewModel.onEvent(PlayEvent.ExportPlays)}) {
+                    Text(text = "Export")
+                }
+            }
+
 
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),

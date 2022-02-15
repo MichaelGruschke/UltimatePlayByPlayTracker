@@ -12,3 +12,4 @@ data class Player(
 )
 
 class InvalidPlayerException(message: String): Exception(message)
+

@@ -23,15 +23,15 @@ fun AddPlayerScreen(
     val nameState = viewModel.playerName.value
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = "AddPlayerScreen") {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is AddPlayerViewModel.UiEvent.ShowSnackbar -> {
+                is AddPlayerViewModel.AddPlayerUiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
-                is AddPlayerViewModel.UiEvent.SaveNote -> {
+                is AddPlayerViewModel.AddPlayerUiEvent.SaveNote -> {
                     navController.navigateUp()
                 }
             }
