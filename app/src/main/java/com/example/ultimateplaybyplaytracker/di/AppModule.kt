@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.data_source.TrackerDatabase
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayerRepositoryImpl
-import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.ExportService
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayRepository
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.DeletePlay
@@ -65,11 +64,5 @@ object AppModule {
             getPlays = GetPlays(repository),
             deletePlay = DeletePlay(repository)
         )
-    }
-
-    @Provides
-    @Singleton
-    fun provideExportService(): ExportService {
-        return ExportService()
     }
 }

@@ -23,7 +23,7 @@ fun AddPlayerScreen(
     val nameState = viewModel.playerName.value
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = "AddPlayerScreen") {
+    LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is AddPlayerViewModel.AddPlayerUiEvent.ShowSnackbar -> {

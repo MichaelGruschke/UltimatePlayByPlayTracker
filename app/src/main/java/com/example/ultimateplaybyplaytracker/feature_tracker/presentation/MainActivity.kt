@@ -1,8 +1,10 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.presentation
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.navigation.compose.NavHost
@@ -12,8 +14,11 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPla
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.TrackerScreen
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
 import com.example.ultimateplaybyplaytracker.ui.theme.CleanArchitectureNoteAppTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalFoundationApi
+@ExperimentalPermissionsApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

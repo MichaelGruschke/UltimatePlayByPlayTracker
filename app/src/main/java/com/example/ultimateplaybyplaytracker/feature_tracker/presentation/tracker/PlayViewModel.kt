@@ -1,33 +1,32 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.app.Application
+import android.content.ContentValues
+import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.CsvConfig
-import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.ExportService
-import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.Exports
+import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.ExportConfig
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.PlayCSV
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.toCsv
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
-
+import androidx.lifecycle.AndroidViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.IOException
+import java.io.OutputStreamWriter
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
-    private val playUseCases: PlayUseCases,
-    private val exportService: ExportService
+    private val playUseCases: PlayUseCases, application: Application,
 ) :
-    ViewModel() {
+    AndroidViewModel(application) {
 
     private val _state = mutableStateOf(PlaysState())
     val state: State<PlaysState> = _state
@@ -41,7 +40,6 @@ class PlayViewModel @Inject constructor(
         getPlays()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun onEvent(event: PlayEvent) {
         when (event) {
             is PlayEvent.RevertPlay -> {
@@ -50,17 +48,23 @@ class PlayViewModel @Inject constructor(
                 }
             }
             is PlayEvent.ExportPlays -> {
-                viewModelScope.launch(IO) {
-                    val transactions = state.value.copy().plays
-                    exportService.export<PlayCSV>(
-                        type = Exports.CSV(CsvConfig()), // 👈 apply config + type of export
-                        content = transactions.toCsv() // 👈 send transformed data of exportable type
-                    ).catch { error ->
-                        _eventFlow.emit(TrackerUiEvent.ShowSnackbar(error.toString()))
-                    }.collect { _ ->
-                        // 👇 do anything on success
-                        _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Plays saved successfully!"))
+                Log.d("EXPORT", Json.encodeToString(state.value))
+                val exportConfig = ExportConfig()
+                val contentValue = ContentValues().apply {
+                    put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
+                    put(MediaStore.Downloads.MIME_TYPE, "text/plain")
+                }
+                val context = getApplication<Application>().applicationContext
+                try {
+                    context.contentResolver.insert(exportConfig.uri, contentValue)?.also { uri ->
+                        context.contentResolver.openOutputStream(uri).use { outputStream ->
+                            val outputWriter = OutputStreamWriter(outputStream)
+                            outputWriter.write(Json.encodeToString(state.value))
+                            outputWriter.close()
+                        }
                     }
+                } catch (e: IOException){
+                    e.printStackTrace()
                 }
             }
             is PlayEvent.LogPlay -> {

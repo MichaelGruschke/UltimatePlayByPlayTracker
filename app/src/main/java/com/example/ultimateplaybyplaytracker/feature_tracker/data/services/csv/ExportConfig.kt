@@ -1,15 +1,16 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv
 
-import android.os.Environment
+import android.net.Uri
+import android.provider.MediaStore
 import java.text.SimpleDateFormat
 
-data class CsvConfig(
+data class ExportConfig  constructor(
     private val prefix: String = "PlayByPlay",
     private val suffix: String = SimpleDateFormat("yyyy-MM-dd")
                                     .format(System.currentTimeMillis())
                                     .toString(),
 
-    val fileName: String = "$prefix-$suffix.csv",
+    val fileName: String = "$prefix-$suffix.txt",
     @Suppress("DEPRECATION")
-    val hostPath: String = Environment.getExternalStorageDirectory().absolutePath
+    val uri: Uri = MediaStore.Downloads.EXTERNAL_CONTENT_URI
 )

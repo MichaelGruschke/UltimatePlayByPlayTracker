@@ -1,6 +1,7 @@
 package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
 
 
+import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
 
@@ -27,12 +28,14 @@ import androidx.navigation.NavController
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components.PlayerItem
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
 import androidx.compose.ui.unit.dp
-import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer.AddPlayerViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.flow.collectLatest
 
 
+@ExperimentalFoundationApi
+@ExperimentalPermissionsApi
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TrackerScreen(
     navController: NavController,
@@ -43,9 +46,15 @@ fun TrackerScreen(
     val playState = playViewModel.state.value
     val scaffoldState = rememberScaffoldState()
 
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        )
+    )
     val isEditMode = remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = "TrackerScreen") {
+    LaunchedEffect(key1 = true) {
         playViewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is PlayViewModel.TrackerUiEvent.ShowSnackbar -> {
@@ -102,13 +111,16 @@ fun TrackerScreen(
 
 
             }
-            Row() {
+            Row {
                 Switch(
                     modifier = Modifier.height(64.dp),
                     checked = isEditMode.value,
                     onCheckedChange = { isEditMode.value = it })
-                
-                Button(onClick = {playViewModel.onEvent(PlayEvent.ExportPlays)}) {
+
+                Button(onClick = {
+                    permissionState.launchMultiplePermissionRequest()
+                    playViewModel.onEvent(PlayEvent.ExportPlays)
+                }) {
                     Text(text = "Export")
                 }
             }
