@@ -16,10 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +32,7 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracke
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @ExperimentalFoundationApi
@@ -49,6 +47,7 @@ fun TrackerScreen(
     val playerState = playerViewModel.state.value
     val playState = playViewModel.state.value
     val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
 
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -96,7 +95,20 @@ fun TrackerScreen(
                         Icon(Icons.Filled.Download, contentDescription = "Export JSON")
                     }
                     IconButton(onClick = {
-                        playViewModel.onEvent(PlayEvent.DeletaAll)
+                        scope.launch {
+                            val result = scaffoldState.snackbarHostState.showSnackbar(
+                                message = "Delete Log?",
+                                actionLabel = "Confirm",
+                                duration = SnackbarDuration.Short
+                            )
+                            when (result) {
+                                SnackbarResult.ActionPerformed -> {
+                                    playViewModel.onEvent(PlayEvent.DeletaAll)
+                                }
+                            }
+                        }
+
+
                     }) {
                         Icon(Icons.Filled.Delete, contentDescription = "Delete Play Table")
                     }
@@ -113,7 +125,7 @@ fun TrackerScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
         },
-        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButtonPosition = FabPosition.End,
         isFloatingActionButtonDocked = true,
         scaffoldState = scaffoldState
     ) {
