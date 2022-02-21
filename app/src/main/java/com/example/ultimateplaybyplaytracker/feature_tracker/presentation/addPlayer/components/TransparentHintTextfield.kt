@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -25,9 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components.PlayerItem
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components.PlayerItem
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
 import androidx.compose.ui.unit.dp
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.Play.PlayEvent
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.Play.PlayViewModel
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.PlayerEvent
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.PlayerViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.flow.collectLatest
@@ -111,7 +115,11 @@ fun TrackerScreen(
 
 
             }
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Switch(
                     modifier = Modifier.height(64.dp),
                     checked = isEditMode.value,
@@ -122,6 +130,11 @@ fun TrackerScreen(
                     playViewModel.onEvent(PlayEvent.ExportPlays)
                 }) {
                     Text(text = "Export")
+                }
+                Button(onClick = {
+                    playViewModel.onEvent(PlayEvent.DeletaAll)
+                }) {
+                    Text(text = "Clear")
                 }
             }
 

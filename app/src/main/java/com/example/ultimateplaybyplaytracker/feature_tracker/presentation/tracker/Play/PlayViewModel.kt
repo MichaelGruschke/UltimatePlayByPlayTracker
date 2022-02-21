@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.Play
 
 import android.app.Application
 import android.content.ContentValues
@@ -11,6 +11,7 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.E
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -57,15 +58,16 @@ class PlayViewModel @Inject constructor(
                     }
                     val context = getApplication<Application>().applicationContext
                     try {
-                        context.contentResolver.insert(exportConfig.uri, contentValue)?.also { uri ->
-                            context.contentResolver.openOutputStream(uri).use { outputStream ->
-                                val outputWriter = OutputStreamWriter(outputStream)
-                                outputWriter.write(Json.encodeToString(state.value))
-                                outputWriter.close()
+                        context.contentResolver.insert(exportConfig.uri, contentValue)
+                            ?.also { uri ->
+                                context.contentResolver.openOutputStream(uri).use { outputStream ->
+                                    val outputWriter = OutputStreamWriter(outputStream)
+                                    outputWriter.write(Json.encodeToString(state.value))
+                                    outputWriter.close()
+                                }
                             }
-                        }
                         _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log saved successfully"))
-                    } catch (e: IOException){
+                    } catch (e: IOException) {
                         _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cannot be saved"))
                     }
                 }
@@ -81,6 +83,12 @@ class PlayViewModel @Inject constructor(
                             event = event.logItem
                         )
                     )
+                }
+            }
+            is PlayEvent.DeletaAll -> {
+                viewModelScope.launch {
+                    playUseCases.deleteAll()
+                    _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cleared"))
                 }
             }
         }

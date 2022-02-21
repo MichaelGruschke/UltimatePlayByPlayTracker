@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components
 
 import android.util.Log
 import androidx.compose.foundation.background

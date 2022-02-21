@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

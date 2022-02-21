@@ -1,4 +1,4 @@
-package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker
+package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player
 
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 

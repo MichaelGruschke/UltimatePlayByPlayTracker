@@ -7,10 +7,7 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.Pla
 import com.example.ultimateplaybyplaytracker.feature_tracker.data.repository.PlayerRepositoryImpl
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayRepository
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.repository.PlayerRepository
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.DeletePlay
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.GetPlays
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.LogPlay
-import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.*
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.AddPlayer
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.DeletePlayer
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.GetPlayers
@@ -62,7 +59,8 @@ object AppModule {
         return PlayUseCases(
             logPlay = LogPlay(repository),
             getPlays = GetPlays(repository),
-            deletePlay = DeletePlay(repository)
+            deletePlay = DeletePlay(repository),
+            deleteAll = DeleteAll(repository)
         )
     }
 }

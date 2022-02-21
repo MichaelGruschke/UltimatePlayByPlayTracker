@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.components.TransparentHintTextField
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components.TransparentHintTextField
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

@@ -4,4 +4,5 @@ data class PlayUseCases(
     val logPlay: LogPlay,
     val getPlays: GetPlays,
     val deletePlay: DeletePlay,
+    val deleteAll: DeleteAll,
 )
