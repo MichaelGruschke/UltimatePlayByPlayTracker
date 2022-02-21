@@ -48,28 +48,31 @@ class PlayViewModel @Inject constructor(
                 }
             }
             is PlayEvent.ExportPlays -> {
-                Log.d("EXPORT", Json.encodeToString(state.value))
-                val exportConfig = ExportConfig()
-                val contentValue = ContentValues().apply {
-                    put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
-                    put(MediaStore.Downloads.MIME_TYPE, "text/plain")
-                }
-                val context = getApplication<Application>().applicationContext
-                try {
-                    context.contentResolver.insert(exportConfig.uri, contentValue)?.also { uri ->
-                        context.contentResolver.openOutputStream(uri).use { outputStream ->
-                            val outputWriter = OutputStreamWriter(outputStream)
-                            outputWriter.write(Json.encodeToString(state.value))
-                            outputWriter.close()
-                        }
+                viewModelScope.launch {
+                    Log.d("EXPORT", Json.encodeToString(state.value))
+                    val exportConfig = ExportConfig()
+                    val contentValue = ContentValues().apply {
+                        put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
+                        put(MediaStore.Downloads.MIME_TYPE, "text/plain")
                     }
-                } catch (e: IOException){
-                    e.printStackTrace()
+                    val context = getApplication<Application>().applicationContext
+                    try {
+                        context.contentResolver.insert(exportConfig.uri, contentValue)?.also { uri ->
+                            context.contentResolver.openOutputStream(uri).use { outputStream ->
+                                val outputWriter = OutputStreamWriter(outputStream)
+                                outputWriter.write(Json.encodeToString(state.value))
+                                outputWriter.close()
+                            }
+                        }
+                        _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log saved successfully"))
+                    } catch (e: IOException){
+                        _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cannot be saved"))
+                    }
                 }
+
             }
             is PlayEvent.LogPlay -> {
                 viewModelScope.launch {
-
                     playUseCases.logPlay(
                         Play(
                             timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
