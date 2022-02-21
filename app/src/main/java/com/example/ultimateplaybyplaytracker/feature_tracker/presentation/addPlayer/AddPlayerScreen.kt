@@ -49,6 +49,8 @@ fun AddPlayerScreen(
                 Icon(imageVector = Icons.Default.Save, contentDescription = "Save player")
             }
         },
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = true,
         scaffoldState = scaffoldState
     ) {
         Column(

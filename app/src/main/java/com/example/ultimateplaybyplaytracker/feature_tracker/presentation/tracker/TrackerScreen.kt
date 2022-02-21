@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.items
 
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -70,8 +70,39 @@ fun TrackerScreen(
         }
     }
 
-
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Ultimate Tracker") },
+                actions = {
+                    // RowScope here, so these icons will be placed horizontally
+                    if (isEditMode.value) {
+                        IconButton(onClick = {
+                            isEditMode.value = false
+                        }) {
+                            Icon(Icons.Filled.Done, contentDescription = "Leave Edit Mode")
+                        }
+                    } else {
+                        IconButton(onClick = {
+                            isEditMode.value = true
+                        }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "Enter Edit Mode")
+                        }
+                    }
+                    IconButton(onClick = {
+                        permissionState.launchMultiplePermissionRequest()
+                        playViewModel.onEvent(PlayEvent.ExportPlays)
+                    }) {
+                        Icon(Icons.Filled.Download, contentDescription = "Export JSON")
+                    }
+                    IconButton(onClick = {
+                        playViewModel.onEvent(PlayEvent.DeletaAll)
+                    }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete Play Table")
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -82,6 +113,8 @@ fun TrackerScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
         },
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = true,
         scaffoldState = scaffoldState
     ) {
         Column(
@@ -106,39 +139,15 @@ fun TrackerScreen(
                     onClick = {
                         playViewModel.onEvent(PlayEvent.RevertPlay(playState.plays.last()))
                     }, colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Red,
+                        backgroundColor = Color.Gray,
                         contentColor = MaterialTheme.colors.surface
                     ), enabled = playState.plays.isNotEmpty()
                 ) {
-                    Text(text = "Undo")
+                    Icon(imageVector = Icons.Default.Backspace, "")
                 }
 
 
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Switch(
-                    modifier = Modifier.height(64.dp),
-                    checked = isEditMode.value,
-                    onCheckedChange = { isEditMode.value = it })
-
-                Button(onClick = {
-                    permissionState.launchMultiplePermissionRequest()
-                    playViewModel.onEvent(PlayEvent.ExportPlays)
-                }) {
-                    Text(text = "Export")
-                }
-                Button(onClick = {
-                    playViewModel.onEvent(PlayEvent.DeletaAll)
-                }) {
-                    Text(text = "Clear")
-                }
-            }
-
-
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 cells = GridCells.Fixed(3)
@@ -158,13 +167,6 @@ fun TrackerScreen(
                     )
                 }
             }
-
         }
-
-
     }
-
 }
-
-
-
