@@ -20,6 +20,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components.PlayerItem
@@ -48,6 +50,10 @@ fun TrackerScreen(
     val playState = playViewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val txtWidth = screenWidth*0.85
+    val backWidth = screenWidth*0.15
 
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -137,17 +143,21 @@ fun TrackerScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
+                    modifier=Modifier.width(txtWidth.dp),
                     text = playState.plays.takeLast(5).map { item ->
                         item.event
                     }.joinToString(" > "),
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Button(
+                    modifier= Modifier.requiredWidth(backWidth.dp),
                     onClick = {
                         playViewModel.onEvent(PlayEvent.RevertPlay(playState.plays.last()))
                     }, colors = ButtonDefaults.buttonColors(
