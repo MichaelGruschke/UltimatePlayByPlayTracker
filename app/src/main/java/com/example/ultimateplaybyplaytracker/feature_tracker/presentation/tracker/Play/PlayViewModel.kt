@@ -11,7 +11,6 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.E
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -49,29 +48,7 @@ class PlayViewModel @Inject constructor(
                 }
             }
             is PlayEvent.ExportPlays -> {
-                viewModelScope.launch {
-                    Log.d("EXPORT", Json.encodeToString(state.value))
-                    val exportConfig = ExportConfig()
-                    val contentValue = ContentValues().apply {
-                        put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
-                        put(MediaStore.Downloads.MIME_TYPE, "text/plain")
-                    }
-                    val context = getApplication<Application>().applicationContext
-                    try {
-                        context.contentResolver.insert(exportConfig.uri, contentValue)
-                            ?.also { uri ->
-                                context.contentResolver.openOutputStream(uri).use { outputStream ->
-                                    val outputWriter = OutputStreamWriter(outputStream)
-                                    outputWriter.write(Json.encodeToString(state.value))
-                                    outputWriter.close()
-                                }
-                            }
-                        _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log saved successfully"))
-                    } catch (e: IOException) {
-                        _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cannot be saved"))
-                    }
-                }
-
+                writeJson()
             }
             is PlayEvent.LogPlay -> {
                 viewModelScope.launch {
@@ -80,7 +57,9 @@ class PlayViewModel @Inject constructor(
                             timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                 .format(System.currentTimeMillis())
                                 .toString(),
-                            event = event.logItem
+                            event = event.logItem,
+                            isO = event.isO,
+                            line = event.line
                         )
                     )
                 }
@@ -99,6 +78,31 @@ class PlayViewModel @Inject constructor(
         playsJob = playUseCases.getPlays().onEach { plays ->
             _state.value = state.value.copy(plays = plays)
         }.launchIn(viewModelScope)
+    }
+
+    private fun writeJson(){
+        viewModelScope.launch {
+            Log.d("EXPORT", Json.encodeToString(state.value))
+            val exportConfig = ExportConfig()
+            val contentValue = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
+                put(MediaStore.Downloads.MIME_TYPE, "text/plain")
+            }
+            val context = getApplication<Application>().applicationContext
+            try {
+                context.contentResolver.insert(exportConfig.uri, contentValue)
+                    ?.also { uri ->
+                        context.contentResolver.openOutputStream(uri).use { outputStream ->
+                            val outputWriter = OutputStreamWriter(outputStream)
+                            outputWriter.write(Json.encodeToString(state.value))
+                            outputWriter.close()
+                        }
+                    }
+                _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log saved successfully"))
+            } catch (e: IOException) {
+                _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cannot be saved"))
+            }
+        }
     }
 
     sealed class TrackerUiEvent {

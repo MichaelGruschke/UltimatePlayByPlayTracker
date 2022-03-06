@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.player.PlayerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -19,6 +20,9 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
     private val _state = mutableStateOf(PlayersState())
     val state: State<PlayersState> = _state
 
+    private val _lineup = mutableStateOf(LineupState())
+    val lineup: State<LineupState> = _lineup
+
     private var playersJob: Job? = null
 
     init {
@@ -32,6 +36,10 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
                     playerUseCases.deletePlayer(event.player)
                 }
             }
+            is PlayerEvent.ModifyPlayerLineup -> {
+                modifyLineup(event.player)
+            }
+
         }
     }
 
@@ -40,5 +48,16 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
         playersJob = playerUseCases.getPlayers().onEach { players ->
             _state.value = state.value.copy(players = players)
         }.launchIn(viewModelScope)
+    }
+
+    private fun modifyLineup(player: Player){
+        if (player in _lineup.value.players){
+            _lineup.value = lineup.value.copy(players=lineup.value.players.filter { it != player})
+        } else {
+            if (_lineup.value.players.size >= 7) {
+                _lineup.value = lineup.value.copy(players=lineup.value.players.drop(1))
+            }
+            _lineup.value = lineup.value.copy(players = lineup.value.players.plus(player))
+        }
     }
 }

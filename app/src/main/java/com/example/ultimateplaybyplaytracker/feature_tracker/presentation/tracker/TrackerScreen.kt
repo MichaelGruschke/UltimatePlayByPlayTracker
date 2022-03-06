@@ -3,6 +3,7 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.track
 
 import android.Manifest
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -47,6 +48,7 @@ fun TrackerScreen(
     playViewModel: PlayViewModel = hiltViewModel()
 ) {
     val playerState = playerViewModel.state.value
+    val lineupState = playerViewModel.lineup.value
     val playState = playViewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -129,8 +131,6 @@ fun TrackerScreen(
                                 }
                             }
                         }
-
-
                     }) {
                         Icon(Icons.Filled.Delete, contentDescription = "Delete Play Table")
                     }
@@ -220,15 +220,24 @@ fun TrackerScreen(
                 cells = GridCells.Fixed(3)
             ) {
                 items(playerState.players) { player ->
+                    Log.d("STATUS", player.toString())
                     PlayerItem(
                         player = player,
+                        isPlaying = player in lineupState.players,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 if (isEditPlayerMode.value) {
                                     playerViewModel.onEvent(PlayerEvent.DeletePlayer(player))
                                 } else {
-                                    playViewModel.onEvent(PlayEvent.LogPlay(player.name))
+                                    if (isSelectLineMode.value) {
+                                        playerViewModel.onEvent(PlayerEvent.ModifyPlayerLineup(player))
+                                    } else {
+                                        playViewModel.onEvent(PlayEvent.LogPlay(
+                                            player.name,
+                                            isO.value,
+                                            lineupState.players.map { player -> player.name }.joinToString(",")))
+                                    }
                                 }
                             }
                     )

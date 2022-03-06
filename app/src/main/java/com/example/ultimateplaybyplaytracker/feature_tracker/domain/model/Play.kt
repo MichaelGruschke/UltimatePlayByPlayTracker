@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
 data class Play(
     @PrimaryKey val timestamp: String,
     val event: String,
-//    val line: String,
-//    val isO: Boolean
+    val line: String,
+    val isO: Boolean
 )
 
 

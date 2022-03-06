@@ -2,6 +2,7 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.track
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,9 +18,14 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 fun PlayerItem(
     player: Player,
     modifier: Modifier,
+    isPlaying: Boolean,
 ){
+    Log.d("STATUS", player.toString() + " " + isPlaying.toString())
     Box(
-        modifier = modifier.padding(8.dp).background(Color.White)
+        modifier = modifier
+            .padding(8.dp)
+            .background(color = if (isPlaying) Color.White else MaterialTheme.colors.onSurface)
+            .border(width = 1.dp, color = Color.White)
     ) {
         Column(modifier = Modifier
             .fillMaxSize(),
@@ -30,10 +36,9 @@ fun PlayerItem(
             Text(
                 text = player.name,
                 style = MaterialTheme.typography.h5,
-                color = MaterialTheme.colors.onSurface,
+                color = if (isPlaying) MaterialTheme.colors.onSurface else Color.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-
             )
         }
     }

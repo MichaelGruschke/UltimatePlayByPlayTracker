@@ -6,7 +6,7 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 
 @Database(
-    entities = [Player::class, Play::class], version=1
+    entities = [Player::class, Play::class], version=3
 )
 abstract class TrackerDatabase: RoomDatabase() {
 

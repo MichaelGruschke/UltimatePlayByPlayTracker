@@ -26,6 +26,7 @@ object AppModule {
     @Singleton
     fun provideTrackerDatabase(app: Application): TrackerDatabase {
         return Room.databaseBuilder(app, TrackerDatabase::class.java, TrackerDatabase.DATABASE_NAME)
+            .fallbackToDestructiveMigration()
             .build()
     }
 

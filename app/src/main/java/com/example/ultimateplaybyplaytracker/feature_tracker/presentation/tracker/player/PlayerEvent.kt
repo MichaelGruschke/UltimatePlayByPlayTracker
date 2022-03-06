@@ -4,4 +4,5 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 
 sealed class PlayerEvent {
     data class DeletePlayer(val player: Player): PlayerEvent()
+    data class ModifyPlayerLineup(val player: Player): PlayerEvent()
 }
