@@ -185,7 +185,7 @@ fun TrackerScreen(
                 }
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(5.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -214,6 +214,7 @@ fun TrackerScreen(
                     })
                 Text(text = "D-Line", modifier=Modifier.padding(5.dp))
             }
+            Divider(color = Color.DarkGray, thickness = 2.dp)
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
                 cells = GridCells.Fixed(3)
