@@ -52,8 +52,12 @@ fun TrackerScreen(
     val scope = rememberCoroutineScope()
 
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val txtWidth = screenWidth*0.85
-    val backWidth = screenWidth*0.15
+    val txtWidth = screenWidth * 0.85
+    val backWidth = screenWidth * 0.15
+
+    val isEditPlayerMode = remember { mutableStateOf(false) }
+    val isO = remember { mutableStateOf(true) }
+    val isSelectLineMode  = remember { mutableStateOf(false) }
 
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -61,7 +65,7 @@ fun TrackerScreen(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
     )
-    val isEditMode = remember { mutableStateOf(false) }
+
 
     LaunchedEffect(key1 = true) {
         playViewModel.eventFlow.collectLatest { event ->
@@ -81,25 +85,27 @@ fun TrackerScreen(
                 title = { Text("Ultimate Tracker") },
                 actions = {
                     // RowScope here, so these icons will be placed horizontally
-                    if (isEditMode.value) {
+                    if (isEditPlayerMode.value) {
                         IconButton(onClick = {
-                            isEditMode.value = false
+                            isEditPlayerMode.value = false
                             scope.launch {
                                 scaffoldState.snackbarHostState.showSnackbar(
                                     message = "Enter Recording Mode",
                                     duration = SnackbarDuration.Short
-                                )}
+                                )
+                            }
                         }) {
                             Icon(Icons.Filled.Done, contentDescription = "Leave Edit Mode")
                         }
                     } else {
                         IconButton(onClick = {
-                            isEditMode.value = true
+                            isEditPlayerMode.value = true
                             scope.launch {
                                 scaffoldState.snackbarHostState.showSnackbar(
                                     message = "Enter Edit Mode",
                                     duration = SnackbarDuration.Short
-                                )}
+                                )
+                            }
                         }) {
                             Icon(Icons.Filled.Edit, contentDescription = "Enter Edit Mode")
                         }
@@ -157,7 +163,7 @@ fun TrackerScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    modifier=Modifier.width(txtWidth.dp),
+                    modifier = Modifier.width(txtWidth.dp),
                     text = playState.plays.takeLast(5).map { item ->
                         item.event
                     }.joinToString(" > "),
@@ -167,7 +173,7 @@ fun TrackerScreen(
                 )
 
                 Button(
-                    modifier= Modifier.requiredWidth(backWidth.dp),
+                    modifier = Modifier.requiredWidth(backWidth.dp),
                     onClick = {
                         playViewModel.onEvent(PlayEvent.RevertPlay(playState.plays.last()))
                     }, colors = ButtonDefaults.buttonColors(
@@ -177,8 +183,36 @@ fun TrackerScreen(
                 ) {
                     Icon(imageVector = Icons.Default.Backspace, "")
                 }
-
-
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Button(
+                    modifier=Modifier.width(128.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.Gray,
+                        contentColor = MaterialTheme.colors.surface
+                    ),
+                    onClick = { isSelectLineMode.value = !isSelectLineMode.value }) {
+                    Text(text = if (isSelectLineMode.value) "Save Line" else "Select Line")
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                RadioButton(
+                    colors=RadioButtonDefaults.colors(unselectedColor = Color.White),
+                    selected = isO.value,
+                    onClick = {
+                        isO.value = true
+                    })
+                Text(text = "O-Line", modifier=Modifier.padding(5.dp))
+                RadioButton(
+                    colors=RadioButtonDefaults.colors(unselectedColor = Color.White),
+                    selected = !isO.value,
+                    onClick = {
+                        isO.value = false
+                    })
+                Text(text = "D-Line", modifier=Modifier.padding(5.dp))
             }
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
@@ -190,7 +224,7 @@ fun TrackerScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                if (isEditMode.value) {
+                                if (isEditPlayerMode.value) {
                                     playerViewModel.onEvent(PlayerEvent.DeletePlayer(player))
                                 } else {
                                     playViewModel.onEvent(PlayEvent.LogPlay(player.name))
