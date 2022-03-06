@@ -84,12 +84,22 @@ fun TrackerScreen(
                     if (isEditMode.value) {
                         IconButton(onClick = {
                             isEditMode.value = false
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Enter Recording Mode",
+                                    duration = SnackbarDuration.Short
+                                )}
                         }) {
                             Icon(Icons.Filled.Done, contentDescription = "Leave Edit Mode")
                         }
                     } else {
                         IconButton(onClick = {
                             isEditMode.value = true
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Enter Edit Mode",
+                                    duration = SnackbarDuration.Short
+                                )}
                         }) {
                             Icon(Icons.Filled.Edit, contentDescription = "Enter Edit Mode")
                         }
