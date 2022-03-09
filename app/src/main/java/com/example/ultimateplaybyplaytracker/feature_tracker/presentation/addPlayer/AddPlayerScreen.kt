@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPlayer.components.MetaCheckbox
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components.TransparentHintTextField
 import kotlinx.coroutines.flow.collectLatest
 
@@ -22,6 +23,7 @@ fun AddPlayerScreen(
     viewModel: AddPlayerViewModel = hiltViewModel()
 ) {
     val nameState = viewModel.playerName.value
+    val metaCheckedState = viewModel.isMetaChecked.value
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(key1 = true) {
@@ -61,6 +63,10 @@ fun AddPlayerScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            MetaCheckbox(checked = metaCheckedState.isChecked, onCheckedChange = {
+                viewModel.onEvent(AddPlayerEvent.SetCheckbox(it))
+            })
+            Spacer(modifier = Modifier.height(64.dp))
             TransparentHintTextField(
                 modifier = Modifier.background(color = Color.White),
                 text = nameState.text,

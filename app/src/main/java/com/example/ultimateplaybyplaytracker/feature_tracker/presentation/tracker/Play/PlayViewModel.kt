@@ -112,7 +112,6 @@ class PlayViewModel @Inject constructor(
 
     private fun writeJson() {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("EXPORT", Json.encodeToString(state.value))
             try {
                 val exportConfig = ExportConfig()
                 val contentValue = ContentValues().apply {
@@ -136,6 +135,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun modifyLineup(player: Player) {
+        if (player.isMeta) return
         if (player in _lineup.value.players) {
             _lineup.value =
                 lineup.value.copy(players = lineup.value.players.filter { it != player })

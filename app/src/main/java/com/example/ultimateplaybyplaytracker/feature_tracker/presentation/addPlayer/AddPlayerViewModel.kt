@@ -28,6 +28,15 @@ class AddPlayerViewModel @Inject constructor(
     )
     val playerName: State<NameTextFieldState> = _playerName
 
+
+    private val _isMetaChecked = mutableStateOf(
+        MetaCheckboxState(
+            isChecked = false
+        )
+    )
+    val isMetaChecked: State<MetaCheckboxState> = _isMetaChecked
+
+
     private val _eventFlow = MutableSharedFlow<AddPlayerUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -43,13 +52,17 @@ class AddPlayerViewModel @Inject constructor(
                     isHintVisisble = !event.focusState.isFocused && playerName.value.text.isBlank()
                 )
             }
+            is AddPlayerEvent.SetCheckbox -> {
+                _isMetaChecked.value = isMetaChecked.value.copy(isChecked = event.isChecked)
+            }
             is AddPlayerEvent.SavePlayer -> {
                 viewModelScope.launch {
                     try {
                         playerUseCases.addPlayer(
                             Player(
                                 id = playerName.value.text.sha256(),
-                                name = playerName.value.text.trim()
+                                name = playerName.value.text.trim(),
+                                isMeta = isMetaChecked.value.isChecked
                             )
                         )
                         _eventFlow.emit(AddPlayerUiEvent.SaveNote)

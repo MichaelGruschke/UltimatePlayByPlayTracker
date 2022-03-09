@@ -9,6 +9,7 @@ data class Player(
 
     @PrimaryKey val id: String,
     val name: String,
+    val isMeta: Boolean,
 )
 
 class InvalidPlayerException(message: String): Exception(message)

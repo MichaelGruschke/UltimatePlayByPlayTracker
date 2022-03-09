@@ -2,8 +2,9 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.addPl
 
 import androidx.compose.ui.focus.FocusState
 
-sealed class AddPlayerEvent{
-    data class EnteredName(val value: String): AddPlayerEvent()
-    data class ChangeTitleFocus(val focusState: FocusState): AddPlayerEvent()
-    object  SavePlayer: AddPlayerEvent()
+sealed class AddPlayerEvent {
+    data class EnteredName(val value: String) : AddPlayerEvent()
+    data class ChangeTitleFocus(val focusState: FocusState) : AddPlayerEvent()
+    object SavePlayer : AddPlayerEvent()
+    data class SetCheckbox(val isChecked: Boolean) : AddPlayerEvent()
 }

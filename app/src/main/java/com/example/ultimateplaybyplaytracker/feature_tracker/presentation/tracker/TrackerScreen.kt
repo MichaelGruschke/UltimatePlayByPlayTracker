@@ -3,7 +3,6 @@ package com.example.ultimateplaybyplaytracker.feature_tracker.presentation.track
 
 import android.Manifest
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -184,8 +183,8 @@ fun TrackerScreen(
                     onClick = {
                         playViewModel.onEvent(PlayEvent.RevertPlay(playState.plays.last()))
                     }, colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Gray,
-                        contentColor = MaterialTheme.colors.surface
+                        backgroundColor = MaterialTheme.colors.surface,
+                        contentColor = MaterialTheme.colors.onSurface
                     ), enabled = playState.plays.isNotEmpty()
                 ) {
                     Icon(imageVector = Icons.Default.Backspace, "")
