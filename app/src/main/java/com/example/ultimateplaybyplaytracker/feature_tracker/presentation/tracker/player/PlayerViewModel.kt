@@ -20,8 +20,6 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
     private val _state = mutableStateOf(PlayersState())
     val state: State<PlayersState> = _state
 
-    private val _lineup = mutableStateOf(LineupState())
-    val lineup: State<LineupState> = _lineup
 
     private var playersJob: Job? = null
 
@@ -36,9 +34,6 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
                     playerUseCases.deletePlayer(event.player)
                 }
             }
-            is PlayerEvent.ModifyPlayerLineup -> {
-                modifyLineup(event.player)
-            }
 
         }
     }
@@ -50,14 +45,4 @@ class PlayerViewModel @Inject constructor(private val playerUseCases: PlayerUseC
         }.launchIn(viewModelScope)
     }
 
-    private fun modifyLineup(player: Player){
-        if (player in _lineup.value.players){
-            _lineup.value = lineup.value.copy(players=lineup.value.players.filter { it != player})
-        } else {
-            if (_lineup.value.players.size >= 7) {
-                _lineup.value = lineup.value.copy(players=lineup.value.players.drop(1))
-            }
-            _lineup.value = lineup.value.copy(players = lineup.value.players.plus(player))
-        }
-    }
 }

@@ -11,6 +11,9 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.data.services.csv.E
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 import androidx.lifecycle.AndroidViewModel
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.play.TrackerState
+import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.LineupState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -30,6 +33,12 @@ class PlayViewModel @Inject constructor(
 
     private val _state = mutableStateOf(PlaysState())
     val state: State<PlaysState> = _state
+
+    private val _lineup = mutableStateOf(LineupState())
+    val lineup: State<LineupState> = _lineup
+
+    private val _trackerState = mutableStateOf(TrackerState())
+    val trackerState: State<TrackerState> = _trackerState
 
     private var playsJob: Job? = null
 
@@ -70,6 +79,25 @@ class PlayViewModel @Inject constructor(
                     _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cleared"))
                 }
             }
+            is PlayEvent.ModifyPlayerLineup -> {
+                modifyLineup(event.player)
+            }
+            is PlayEvent.ToggleEditMode -> {
+                _trackerState.value = trackerState.value.copy(
+                    isEditMode = !trackerState.value.isEditMode
+                )
+            }
+            is PlayEvent.ToggleLineSelectionMode -> {
+                _trackerState.value = trackerState.value.copy(
+                    isLineSelectionMode = !trackerState.value.isLineSelectionMode
+                )
+            }
+            is PlayEvent.SetOLineFlag -> {
+                _trackerState.value = trackerState.value.copy(
+                    isOLine = event.isOLine
+                )
+            }
+
         }
     }
 
@@ -102,6 +130,17 @@ class PlayViewModel @Inject constructor(
             } catch (e: IOException) {
                 _eventFlow.emit(TrackerUiEvent.ShowSnackbar("Play by Play Log cannot be saved"))
             }
+        }
+    }
+
+    private fun modifyLineup(player: Player){
+        if (player in _lineup.value.players){
+            _lineup.value = lineup.value.copy(players=lineup.value.players.filter { it != player})
+        } else {
+            if (_lineup.value.players.size >= 7) {
+                _lineup.value = lineup.value.copy(players=lineup.value.players.drop(1))
+            }
+            _lineup.value = lineup.value.copy(players = lineup.value.players.plus(player))
         }
     }
 
