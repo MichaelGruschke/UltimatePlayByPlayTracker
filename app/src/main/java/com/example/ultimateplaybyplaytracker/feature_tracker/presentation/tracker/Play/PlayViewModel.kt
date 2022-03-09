@@ -12,7 +12,6 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Play
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.use_case.logger.PlayUseCases
 import androidx.lifecycle.AndroidViewModel
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
-import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.play.TrackerState
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.LineupState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
