@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.components.PlayerItem
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.utils.Screen
 import androidx.compose.ui.unit.dp
+import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.Play.PlayEvent
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.Play.PlayViewModel
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.PlayerEvent
@@ -65,6 +66,24 @@ fun TrackerScreen(
         )
     )
 
+    fun _playerClickable(player: Player) {
+        val isPlaying = player in lineupState.players
+        if (trackerState.isEditMode) {
+            if (!isPlaying) {
+                playerViewModel.onEvent(PlayerEvent.DeletePlayer(player))
+            }
+        } else {
+            if (trackerState.isLineSelectionMode) {
+                playViewModel.onEvent(PlayEvent.ModifyPlayerLineup(player))
+            } else {
+                playViewModel.onEvent(
+                    PlayEvent.LogPlay(
+                        player.name,
+                    )
+                )
+            }
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         playViewModel.eventFlow.collectLatest { event ->
@@ -210,27 +229,13 @@ fun TrackerScreen(
                 cells = GridCells.Fixed(3)
             ) {
                 items(playerState.players) { player ->
-                    val isPlaying = player in lineupState.players
                     PlayerItem(
                         player = player,
-                        isPlaying = isPlaying,
+                        isPlaying = player in lineupState.players,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                if (trackerState.isEditMode) {
-                                    if (!isPlaying) {
-                                        playerViewModel.onEvent(PlayerEvent.DeletePlayer(player))
-                                    }
-                                } else {
-                                    if (trackerState.isLineSelectionMode) {
-                                        playViewModel.onEvent(PlayEvent.ModifyPlayerLineup(player))
-                                    } else {
-                                        playViewModel.onEvent(PlayEvent.LogPlay(
-                                            player.name,
-                                        )
-                                        )
-                                    }
-                                }
+                                _playerClickable(player)
                             }
                     )
                 }
