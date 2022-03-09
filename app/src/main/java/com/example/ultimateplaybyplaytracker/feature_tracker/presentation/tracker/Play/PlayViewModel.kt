@@ -14,9 +14,11 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.ultimateplaybyplaytracker.feature_tracker.domain.model.Player
 import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracker.player.LineupState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.IOException
@@ -66,8 +68,9 @@ class PlayViewModel @Inject constructor(
                                 .format(System.currentTimeMillis())
                                 .toString(),
                             event = event.logItem,
-                            isO = event.isO,
-                            line = event.line
+                            isO = trackerState.value.isOLine,
+                            line = lineup.value.players.map { player -> player.name }
+                                .joinToString(",")
                         )
                     )
                 }
@@ -107,16 +110,16 @@ class PlayViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun writeJson(){
-        viewModelScope.launch {
+    private fun writeJson() {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.d("EXPORT", Json.encodeToString(state.value))
-            val exportConfig = ExportConfig()
-            val contentValue = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
-                put(MediaStore.Downloads.MIME_TYPE, "text/plain")
-            }
-            val context = getApplication<Application>().applicationContext
             try {
+                val exportConfig = ExportConfig()
+                val contentValue = ContentValues().apply {
+                    put(MediaStore.Downloads.DISPLAY_NAME, exportConfig.fileName)
+                    put(MediaStore.Downloads.MIME_TYPE, "text/plain")
+                }
+                val context = getApplication<Application>().applicationContext
                 context.contentResolver.insert(exportConfig.uri, contentValue)
                     ?.also { uri ->
                         context.contentResolver.openOutputStream(uri).use { outputStream ->
@@ -132,12 +135,13 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    private fun modifyLineup(player: Player){
-        if (player in _lineup.value.players){
-            _lineup.value = lineup.value.copy(players=lineup.value.players.filter { it != player})
+    private fun modifyLineup(player: Player) {
+        if (player in _lineup.value.players) {
+            _lineup.value =
+                lineup.value.copy(players = lineup.value.players.filter { it != player })
         } else {
             if (_lineup.value.players.size >= 7) {
-                _lineup.value = lineup.value.copy(players=lineup.value.players.drop(1))
+                _lineup.value = lineup.value.copy(players = lineup.value.players.drop(1))
             }
             _lineup.value = lineup.value.copy(players = lineup.value.players.plus(player))
         }

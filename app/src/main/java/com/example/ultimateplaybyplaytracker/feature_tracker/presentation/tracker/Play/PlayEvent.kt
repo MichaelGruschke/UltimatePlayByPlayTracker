@@ -7,7 +7,7 @@ import com.example.ultimateplaybyplaytracker.feature_tracker.presentation.tracke
 sealed class PlayEvent {
     data class RevertPlay(val play: Play): PlayEvent()
     object ExportPlays: PlayEvent()
-    data class LogPlay(val logItem: String, val isO: Boolean, val line: String): PlayEvent()
+    data class LogPlay(val logItem: String): PlayEvent()
     object DeletaAll: PlayEvent()
     data class ModifyPlayerLineup(val player: Player): PlayEvent()
     object ToggleEditMode: PlayEvent()

@@ -227,10 +227,6 @@ fun TrackerScreen(
                                     } else {
                                         playViewModel.onEvent(PlayEvent.LogPlay(
                                             player.name,
-                                            trackerState.isOLine,
-                                            lineupState.players
-                                                .map { player -> player.name }
-                                                .joinToString(",")
                                         )
                                         )
                                     }
